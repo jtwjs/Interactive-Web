@@ -1,0 +1,27 @@
+body {
+  background-color: #000;
+}
+
+h2 {
+  font-size: 40px;
+  text-transform: uppercase;
+  color: orange;
+}
+
+.sprite {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+
+  background: url(./assets/sprite_spaceship.png) no-repeat 0 0 / auto 150px;
+  transform: translate(-50%, -50%);
+  animation: spaceship 1s infinite steps(17);
+}
+
+@keyframes spaceship {
+  100% {
+    background-position-x: -2550px;
+  }
+}
