@@ -32,26 +32,26 @@
 
 .item:nth-child(1) {
   top: 55%;
-  background-image: url(assets/ilbuni_0.png);
+  background-image: url(../assets/ilbuni_0.png);
   animation-duration: 3s;
 }
 
 .item:nth-child(2) {
   left: 95%;
-  background-image: url(assets/ilbuni_1.png);
+  background-image: url(../assets/ilbuni_1.png);
   animation-duration: 12s;
 }
 
 .item:nth-child(3) {
   top: 60%;
   left: 85%;
-  background-image: url(assets/ilbuni_2.png);
+  background-image: url(../assets/ilbuni_2.png);
   animation-duration: 2s;
 }
 
 .item:nth-child(4) {
   top: 45%;
   left: 95%;
-  background-image: url(assets/ilbuni_3.png);
+  background-image: url(../assets/ilbuni_3.png);
   animation-duration: 5s;
 }
