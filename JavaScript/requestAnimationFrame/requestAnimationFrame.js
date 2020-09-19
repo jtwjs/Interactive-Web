@@ -1,16 +1,22 @@
-const ilbuni = document.querySelector(".ilbuni");
-const value = document.querySelector(".value");
-let yPos = 0;
-let rafId;
+let timeId;
+let count = 0;
+const btn = document.querySelector(".btn");
 
-function render() {
-  value.innerHTML = yPos;
-  ilbuni.style.transform = `translateY(${-yPos}px)`;
-  yPos += 10;
+function sample() {
+  count++;
 
-  rafId = requestAnimationFrame(render);
-
-  if (yPos > 500) cancelAnimationFrame(rafId);
+  if (count % 60 === 0) {
+    //반복시간 설정  흉내 가능
+    console.log("힘내");
+  }
+  timerId = requestAnimationFrame(sample);
+  //목표가 초당 60번 (상황에 따라 늦쳐질수 있다.)
 }
 
-render();
+//requestAnimationFrame(sample); 함수바깥에서 실행시 setTimeout처럼 1번말 실행됨
+
+sample();
+
+btn.addEventListener("click", function () {
+  cancelAnimationFrame(timeId);
+});
