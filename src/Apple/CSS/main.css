@@ -1,0 +1,60 @@
+@charset 'utf-8';
+
+html {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+}
+
+body {
+  color: #1d1d1f;
+  letter-spacing: -0.05em;
+  background-color: #fff;
+  overflow-x: hidden;
+}
+
+p {
+  line-height: 1.6;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+.nav {
+  max-width: 1000px;
+  height: 44px;
+  margin: 0 auto;
+}
+
+.global-nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.local-nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-name {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.local-nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.local-nav-item:not(:last-child) {
+  margin-right: 10px;
+}
