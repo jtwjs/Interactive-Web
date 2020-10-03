@@ -17,7 +17,7 @@ p {
 }
 
 #header {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -62,6 +62,7 @@ p {
 
 .scroll-section {
   padding-top: 50vh;
+  outline: 1px solid red;
 }
 
 #scroll-section-0 h1 {
@@ -147,6 +148,21 @@ p {
   height: 7rem;
   color: #fff;
   background: darkorange;
+}
+
+.sticky-elem {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+}
+
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem {
+  display: block;
 }
 
 @media (min-width: 1024px) {
