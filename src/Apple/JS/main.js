@@ -181,7 +181,41 @@
 
         break;
       case 2:
-        
+        // console.log('2 play');
+        if (scrollRatio <= 0.32) {
+          // in
+          objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(values.messageA_translateY_in, currentYOffset)}%, 0)`;
+        } else {
+          // out
+          objs.messageA.style.opacity = calcValues(values.messageA_opacity_out, currentYOffset);
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(values.messageA_translateY_out, currentYOffset)}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.67) {
+          // in
+          objs.messageB.style.transform = `translate3d(0, ${calcValues(values.messageB_translateY_in, currentYOffset)}%, 0)`;
+          objs.messageB.style.opacity = calcValues(values.messageB_opacity_in, currentYOffset);
+          objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYOffset)})`;
+        } else {
+          // out
+          objs.messageB.style.transform = `translate3d(0, ${calcValues(values.messageB_translateY_out, currentYOffset)}%, 0)`;
+          objs.messageB.style.opacity = calcValues(values.messageB_opacity_out, currentYOffset);
+          objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYOffset)})`;
+        }
+
+        if (scrollRatio <= 0.93) {
+          // in
+          objs.messageC.style.transform = `translate3d(0, ${calcValues(values.messageC_translateY_in, currentYOffset)}%, 0)`;
+          objs.messageC.style.opacity = calcValues(values.messageC_opacity_in, currentYOffset);
+          objs.pinC.style.transform = `scaleY(${calcValues(values.pinC_scaleY, currentYOffset)})`;
+        } else {
+          // out
+          objs.messageC.style.transform = `translate3d(0, ${calcValues(values.messageC_translateY_out, currentYOffset)}%, 0)`;
+          objs.messageC.style.opacity = calcValues(values.messageC_opacity_out, currentYOffset);
+          objs.pinC.style.transform = `scaleY(${calcValues(values.pinC_scaleY, currentYOffset)})`;
+        }
+
         break;
       case 3:
         break;
