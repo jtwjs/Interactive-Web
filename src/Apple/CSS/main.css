@@ -71,12 +71,14 @@ p {
 }
 
 .main-message {
+  top: 35vh;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 3em;
   margin: 5px 0;
   font-size: 2.5rem;
+  opacity: 0;
 }
 
 .main-message p {
@@ -120,6 +122,16 @@ p {
   background-color: rgba(29, 29, 31);
 }
 
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
+
 .mid-message {
   max-width: 1000px;
   margin: 0 auto;
@@ -152,7 +164,6 @@ p {
 
 .sticky-elem {
   position: fixed;
-  top: 0;
   left: 0;
   display: none;
   width: 100%;
@@ -189,6 +200,16 @@ p {
   .desc-message {
     width: 20%;
   }
+
+  #scroll-section-2 .b {
+    top: 20%;
+    left: 53%;
+  }
+
+  #scroll-section-2 .c {
+    left: 55%;
+  }
+
   .mid-message {
     font-size: 4vw;
   }
