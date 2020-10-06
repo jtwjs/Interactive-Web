@@ -22,7 +22,7 @@ p {
   left: 0;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: #fff;
+  z-index: 10;
 }
 
 .nav {
@@ -62,12 +62,15 @@ p {
 
 .scroll-section {
   padding-top: 50vh;
-  outline: 1px solid red;
 }
 
 #scroll-section-0 h1 {
+  position: relative;
+  top: -12vh;
   font-size: 4rem;
+  font-weight: 900;
   text-align: center;
+  z-index: 5;
 }
 
 .main-message {
@@ -114,6 +117,7 @@ p {
 .desc-message {
   width: 50%;
   font-weight: bold;
+  opacity: 0;
 }
 
 .pin {
@@ -174,6 +178,17 @@ p {
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
   display: block;
+}
+
+.sticky-elem-canvas {
+  top: 0;
+  height: 100%;
+}
+
+.sticky-elem-canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 @media (min-width: 1024px) {
