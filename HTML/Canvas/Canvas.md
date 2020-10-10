@@ -106,3 +106,212 @@
 
   draw();
   ```
+
+#### 애니메이션 정지
+
+- ```js
+  const canvas = document.querySelector(".canvas");
+  const context = canvas.getContext("2d");
+  let xPos = 10;
+  let count = 0;
+  let timerId;
+
+  function draw() {
+    count++;
+
+    context.clearRect(0, 0, canvas.width, canvas.height); //캔버스 초기화
+    context.beginPath();
+    context.arc(xPos, 150, 10, 0, Math.PI * 2, false);
+    context.fill();
+    xPos += 3;
+
+    /* if (xPos >= canvas.width - 10 {
+    return;  
+    requestAnimationFrame이 실행하기전에 리턴해버리기
+  })
+  */
+    timerId = requestAnimationFrame(draw);
+
+    if (xPos >= canvas.width - 10) {
+      cancelAnimationFrame(timerId);
+      //timerId를 이용해서 cancleAnimationFrame 사용
+    }
+  }
+  ```
+
+### 이미지
+
+- ```js
+  const canvas = document.querySelector(".canvas");
+  const context = canvas.getContext("2d");
+
+  const imgElem = new Image(); //이미지 객체 생성
+  imgElem.src = "assets/ilbuni_1.png";
+  imgElem.addEventListener("load", () => {
+    //이미지가 로드된 후
+    context.drawImage(imgElem, 50, 50);
+    //drawImage(image, dx, dy)
+
+    context.drawImage(imgElem, 50, 50, 70, 70);
+    //drawImage(image, dx, dy, dWidth, dHeight);
+
+    context.drawImage(imgElem, 100, 100, 200, 200, 0, 0, 100, 100);
+    //drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight); 소스이미지의 일부분 가져오기
+  });
+  ```
+
+- ```html
+  <canvas class="canvas" width="500" height="300"> </canvas>
+  <div class="control">
+    <button class="color-btn" data-type="color" data-color="black"></button>
+    <button class="color-btn" data-type="color" data-color="red"></button>
+    <button class="color-btn" data-type="color" data-color="green"></button>
+    <button class="color-btn" data-type="color" data-color="blue"></button>
+    <button class="image-btn" data-type="image"></button>
+  </div>
+
+  <script>
+    const canvas = document.querySelector(".canvas");
+    const context = canvas.getContext("2d");
+    const control = document.querySelector(".control");
+    let drawingMode; //true일때만 그리기
+    let brush = "color"; // 'color', 'image'
+    let colorVal = "black";
+
+    const imgElem = new Image();
+    imgElem.src = "assets/ilbuni_1.png";
+
+    function downHandler() {
+      drawingMode = true;
+    }
+
+    function upHandler() {
+      drawingMode = false;
+    }
+
+    function moveHandler(e) {
+      if (!drawingMode) return;
+
+      switch (brush) {
+        case "color":
+          context.beginPath();
+          context.arc(e.layerX, e.layerY, 10, 0, Math.PI * 2, false);
+          //clientX, clientY는  브라우저 왼쪽 위를 기준으로 잡음
+          //layerX, layerY는 캔버스 기준으로 위치를 잡음
+          context.fill();
+          break;
+        case "image":
+          context.drawImage(imgElem, e.layerX, e.layerY, 50, 50);
+          break;
+      }
+    }
+
+    function setColor(event) {
+      brush = event.target.getAttribute("data-type");
+      colorVal = event.target.getAttribute("data-color");
+      context.fillStyle = colorVal;
+    }
+
+    canvas.addEventListener("mousedown", downHandler);
+    canvas.addEventListener("mousemove", moveHandler);
+    canvas.addEventListener("mouseup", upHandler);
+    control.addEventListener("click", setColor);
+  </script>
+  ```
+
+#### 이미지 저장
+
+> toDateURL() 캔버스이미지를 img url로 저장
+
+- ```js
+  const url = canvas.toDataURL("image/png"); //이미지 저장시킴
+  //canvas.toDataURL(type, encoderOptions);
+  const imgElem = new Image();
+  imgElem.src = url;
+  resultImg.appendChild(imgElem);
+  console.log(url);
+  ```
+
+#### 비디오
+
+- canvas에서 비디오를 쓰는 이유
+  - canvas는 기본적으로 pixel 단위로 조작 가능해서 비디오를 일반 HTML에서 불가능한 조작이 가능
+
+#### 비디오 영상에 자막(글씨) 입히기
+
+- ```js
+  const canvas = document.querySelector(".canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.font = "bold 50px serif";
+  ctx.fillStyle = "red";
+
+  const videoElem = document.querySelector(".video");
+  videoElem.addEventListener("canplaythrough", render);
+
+  const message = [
+    { time: 1, message: "1 zz", x: 100, y: 100 },
+    { time: 2, message: "2 gg", x: 300, y: 300 },
+    { time: 3, message: "3 vv", x: 400, y: 200 },
+  ];
+
+  function render() {
+    ctx.drawImage(videoElem, 0, 0, 600, 400);
+    //drawImage에 넣을수 있는것 1,이미지 2,비디오 3,다른 캔버스
+
+    for (let i = 0; i < message.length; i++) {
+      if (videoElem.currentTime > message[i].time) {
+        ctx.fillText(message[i].message, message[i].x, message[i].y);
+      }
+    }
+
+    requestAnimationFrame(render);
+  }
+  ```
+
+#### 비디오 픽셀 조작하기
+
+- ```js
+  const canvas = document.querySelector(".canvas");
+  const ctx = canvas.getContext("2d");
+
+  const btnsElem = document.querySelector(".btns");
+
+  let imageData;
+  const particles = [];
+  let particle;
+  let colorValue;
+  let leng;
+
+  const videoElem = document.querySelector(".video");
+  videoElem.addEventListener("canplaythrough", render);
+
+  function render() {
+    ctx.drawImage(videoElem, 0, 0, 600, 400);
+    //drawImage에 넣을수 있는것 1,이미지 2,비디오 3,다른 캔버스
+    imageData = ctx.getImageData(0, 0, 600, 400);
+    //getImageData() 각 픽셀의 색상정보를 가져옴
+    leng = imageData.data.length / 4; //leng === 픽셀수
+
+    for (let i = 0; i < leng; i++) {
+      switch (colorValue) {
+        case "red":
+          imageData.data[i * 4 + 0] = 255;
+          break;
+        case "green":
+          imageData.data[i * 4 + 1] = 255;
+          break;
+        case "blue":
+          imageData.data[i * 4 + 2] = 255;
+          break;
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    //바뀐 이미지데이터로 ㄱㄱ
+    requestAnimationFrame(render);
+  }
+
+  btnsElem.addEventListener("click", function (e) {
+    colorValue = e.target.getAttribute("data-color");
+  });
+  ```

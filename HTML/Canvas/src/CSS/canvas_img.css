@@ -1,0 +1,41 @@
+.canvas {
+  background-color: #eee;
+}
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-btn[data-color="black"] {
+  background-color: black;
+}
+.color-btn[data-color="red"] {
+  background-color: red;
+}
+.color-btn[data-color="green"] {
+  background-color: green;
+}
+.color-btn[data-color="blue"] {
+  background-color: blue;
+}
+
+.image-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border: 1px solid #333;
+  background-image: url(../assets/ilbuni_1.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.result-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
