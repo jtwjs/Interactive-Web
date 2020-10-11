@@ -315,3 +315,60 @@
     colorValue = e.target.getAttribute("data-color");
   });
   ```
+
+### transform
+
+>
+
+- 더 복잡한 그림(drawings)을 그리기 시작하려면 반드시 있어야 하는 메소드
+  - save() : canvas의 모든 상태를 저장한다
+  - restore() : 가장 최근에 저장된 canvas 상태를 복원한다
+- Canvas 상태는 스택(stack)에 쌓인다.
+
+  - `save()` 메소드가 호출될 때마다 현재 drawing 상태가 스택 위로 푸시된다.
+
+- ```js
+  const canvas = document.querySelector(".canvas");
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillRect(100, 100, 200, 200);
+  ctx.fillStyle = "orange";
+  ctx.fillRect(150, 150, 200, 200);
+
+  ctx.save(); //현재 상태 저장하기
+
+  ctx.fillStyle = "blue";
+  ctx.beginPath();
+  ctx.arc(300, 300, 50, 0, Math.PI * 2, false);
+  ctx.fill();
+
+  ctx.restore(); //이전 상태 복원하기
+
+  ctx.beginPath();
+  ctx.arc(300, 300, 20, 0, Math.PI * 2, false);
+  ctx.fill();
+  ```
+
+#### canvas는 무조건 기준점이 왼쪽 상단(0, 0)
+
+- ```js
+  unction draw() {
+    //  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    direction = direction * -1;
+    ctx.save(); //기준점이 transalte 되기전 상태를 저장
+    ctx.strokeStyle = getRandomColor();
+    ctx.setTransform(1,0,0,1,0,0);
+    //setTransform(변환행렬): 변환 초기화
+    ctx.translate(250, 250); //기준점을 이동
+    ctx.scale(scaleValue, scaleValue);
+    ctx.rotate(toRadian(rotationValue*direction));
+    
+    ctx.strokeRect(-50, -50, 100, 100);//변환이 끝난다음에 그리기
+    ctx.restore();
+    
+    scaleValue -= 0.01;
+    rotationValue += 1; //canvas에서 각도는 라디안값으로 해야함
+
+    requestAnimationFrame(draw);
+}
+  ```
