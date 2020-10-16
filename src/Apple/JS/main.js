@@ -3,6 +3,11 @@
   let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
   let currentScene = 0; //현재 활성화된 씬(scroll-section)
   let enterNewScene = false; //새로운 scene이 시작된 순간 true
+  let acc = 0.1;
+  let delayedYOffset = 0;
+  
+  let rafId;
+  let rafState;
   const sceneInfo = [
     {
       //0
@@ -207,8 +212,8 @@
 
     switch (currentScene) {
       case 0:
-        let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
-        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        // let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+        // objs.context.drawImage(objs.videoImages[sequence], 0, 0);
         objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset);
         if (scrollRatio <= 0.22) {
           //in
@@ -252,8 +257,8 @@
         break;
       case 2:
         // console.log('2 play');
-        let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));
-        objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+        // let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));
+        // objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
 
         if (scrollRatio <= 0.5) {
           objs.canvas.style.opacity = calcValues(values.canvas_opacity_in, currentYOffset);
@@ -445,7 +450,7 @@
             values.canvasCaption_translateY[2].start = values.canvasCaption_opacity[2].start;
             values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].end;
             objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
-            objs.canvasCaption.style.transform = `trnaslate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%,0)`;
+            objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%,0)`;
 
          }
           
@@ -455,18 +460,19 @@
   }
 
   function scrollLoop() {
+    
     enterNewScene = false;
     prevScrollHeight = 0;
     for (let i = 0; i < currentScene; i++) {
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
 
-    if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+    if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       enterNewScene = true;
       currentScene++;
       document.body.setAttribute("id", `show-scene-${currentScene}`);
     }
-    if (yOffset < prevScrollHeight) {
+    if (delayedYOffset < prevScrollHeight) {
       enterNewScene = true;
       if (currentScene === 0) return;
       currentScene--;
@@ -476,8 +482,31 @@
     playAnimation();
   }
 
-  window.addEventListener("resize", setLayout);
+  function loop() {
+    delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+    if(!enterNewScene) {
+
+      if(currentScene === 0 || currentScene === 2) {
+    const currentYOffset = delayedYOffset - prevScrollHeight;
+    const objs = sceneInfo[currentScene].objs;
+    const values = sceneInfo[currentScene].values;
+      let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+      if(objs.videoImages[sequence]) {
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+      }
+    }
+  }
+    rafId = requestAnimationFrame(loop);
+    
+    if(Math.abs(yOffset - delayedYOffset) < 1) {
+      cancelAnimationFrame(rafId);
+      rafState = false;
+    }
+  }
+
   window.addEventListener("load", () => {
+    document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
   });
@@ -485,6 +514,24 @@
     yOffset = window.pageYOffset;
     checkMenu();
     scrollLoop();
+    
+    if(!rafState) {
+      rafId = requestAnimationFrame(loop);
+      rafState = true;
+    }
   });
+    window.addEventListener("resize", () => {
+      if(window.innerWidth > 600) {
+        setLayout();
+      }
+
+      sceneInfo[3].values.rectStartY = 0;
+    });
+
+    //모바일 가로세로 바뀔떄 이벤트
+    window.addEventListener('orientationchange', setLayout);
+    document.querySelector('.loading').addEventListener('transitionend', (e) => {
+      document.body.removeChild(e.currentTarget);
+    })
   setCanvasImages();
 })();
