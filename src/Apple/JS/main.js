@@ -467,8 +467,18 @@
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
 
+    if (delayedYOffset < prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+      document.body.classList.remove('scroll-effect-end');
+    }
+
     if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       enterNewScene = true;
+
+      if(currentScene === sceneInfo.length - 1){
+        document.body.classList.add('scroll-effect-end');
+      }
+
+      if(currentScene < sceneInfo.length - 1)
       currentScene++;
       document.body.setAttribute("id", `show-scene-${currentScene}`);
     }
@@ -506,32 +516,58 @@
   }
 
   window.addEventListener("load", () => {
+    setLayout();// 중간에 새로고침 시, 콘텐츠 양에 따라 높이 계산에 오차가 발생하는 경우를 방지하기 위해 before-load 클래스 제거 전에도 확실하게 높이를 세팅하도록 한번 더 실행
+    
     document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
-  });
-  window.addEventListener("scroll", () => {
-    yOffset = window.pageYOffset;
-    checkMenu();
-    scrollLoop();
-    
-    if(!rafState) {
-      rafId = requestAnimationFrame(loop);
-      rafState = true;
-    }
-  });
-    window.addEventListener("resize", () => {
-      if(window.innerWidth > 600) {
-        setLayout();
-      }
 
-      sceneInfo[3].values.rectStartY = 0;
+    let tempYOffset = yOffset;
+    let tempScrollCount = 0;
+    if(yOffset > 0){
+    let siId = setInterval( () => {
+      window.scrollTo(0, tempYOffset);
+      tempYOffset += 3;
+      tempScrollCount++;
+      if(tempScrollCount > 10)
+      clearInterval(siId);
+    }, 20);
+  }
+
+    window.addEventListener("scroll", () => {
+      yOffset = window.pageYOffset;
+      checkMenu();
+      scrollLoop();
+      
+      if(!rafState) {
+        rafId = requestAnimationFrame(loop);
+        rafState = true;
+      }
     });
 
+    window.addEventListener("resize", () => {
+      if(window.innerWidth > 900) {
+        window.location.reload();
+      }
+
+    });
     //모바일 가로세로 바뀔떄 이벤트
-    window.addEventListener('orientationchange', setLayout);
+    window.addEventListener('orientationchange', ()=> {
+      scrollTo(0, 0);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
+
     document.querySelector('.loading').addEventListener('transitionend', (e) => {
       document.body.removeChild(e.currentTarget);
     })
+  });
+  
+   
+
+    
+
+   
   setCanvasImages();
 })();
